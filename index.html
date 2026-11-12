@@ -1,0 +1,19 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>معاينة صور الصفات دون حفظ - أبو فراس</title><style>body{font-family:system-ui;background:#f1f5f9;color:#0f172a;margin:0;padding:18px}main{max-width:660px;margin:auto}.panel{background:white;border-radius:18px;padding:20px;margin:14px 0;box-shadow:0 3px 12px #0001}h1{color:#1e40af}label{display:block;font-weight:700;margin:12px 0 6px}input{box-sizing:border-box;width:100%;padding:12px;border:1px solid #cbd5e1;border-radius:10px}button{background:#2563eb;color:white;border:0;border-radius:12px;padding:13px 18px;font-weight:700;margin:8px 0;cursor:pointer}button:disabled{background:#94a3b8}img{width:100%;max-width:260px;aspect-ratio:4/3;object-fit:contain;background:#f8fafc;border-radius:12px;display:block;margin:12px auto}.warn{background:#fff7ed;padding:12px;border-radius:10px}#status{white-space:pre-wrap;line-height:1.8}.ok{color:#047857}.bad{color:#b91c1c}</style></head><body><main><h1>🖼️ معاينة صور الصفات دون حفظ</h1><p class="warn">نسخة آمنة للمعاينة فقط. لا تتصل بالسحابة ولا تحفظ الصور أو تغيّر الموقع الأساسي.</p><div class="panel" hidden><h2>1. تسجيل دخول المعلم</h2><label>البريد الإلكتروني</label><input id="email" type="email" autocomplete="username"><label>كلمة المرور</label><input id="password" type="password" autocomplete="current-password"><button id="login">تسجيل الدخول وفحص السحابة</button><p id="loginStatus"></p></div><div id="editor" class="panel" hidden><h2>2. اختيار الصور ومراجعتها</h2><p>اختر الصورة المناسبة لكل صفة بشكل مستقل، حتى لا نعتمد على ترتيب اختيار الصور في الآيفون.</p><div id="items"></div><button id="save" disabled>☁️ حفظ الصور الثلاث في Firebase</button><p id="status"></p></div></main><script>
+const names=['Big','Small','Tall'];
+const items=document.getElementById('items');
+const status=document.getElementById('status');
+const chosen={};
+for(const name of names){
+ const wrap=document.createElement('div');wrap.className='panel';
+ const h=document.createElement('h3');h.textContent=name;
+ const label=document.createElement('label');label.textContent='اختر صورة '+name+' من الآيفون';
+ const input=document.createElement('input');input.type='file';input.accept='image/*';
+ const preview=document.createElement('img');preview.hidden=true;preview.alt='معاينة '+name;
+ input.onchange=()=>{const f=input.files?.[0];if(!f)return; if(chosen[name])URL.revokeObjectURL(chosen[name]);chosen[name]=URL.createObjectURL(f);preview.src=chosen[name];preview.hidden=false;status.textContent=names.every(n=>chosen[n])?'اكتملت الصور الثلاث. هذه معاينة محلية فقط، لم يتم حفظ أي شيء في السحابة.':'تم اختيار صورة '+name+' محليًا.';};
+ wrap.append(h,label,input,preview);items.append(wrap);
+}
+document.getElementById('editor').hidden=false;
+document.getElementById('login').disabled=true;
+document.getElementById('loginStatus').textContent='نسخة معاينة معزولة: لا تسجيل دخول ولا اتصال بـ Firebase.';
+document.getElementById('save').remove();
+</script></body></html>
